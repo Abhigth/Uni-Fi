@@ -1,0 +1,17 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:15
+    container_name: unifi-db
+    restart: always
+    environment:
+      POSTGRES_USER: unifi_user
+      POSTGRES_PASSWORD: unifi_pass
+      POSTGRES_DB: unifi
+    ports:
+      - "5432:5432"
+    volumes:
+      - unifi-data:/var/lib/postgresql/data
+
+volumes:
+  unifi-data:
