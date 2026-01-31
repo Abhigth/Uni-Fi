@@ -1,31 +1,32 @@
-const API = "http://localhost:5000/api";
+import axios from "axios";
 
-export async function post(path, body, token) {
-  return fetch(API + path, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-    },
-    body: JSON.stringify(body),
-  }).then(res => res.json());
-}
+const api = axios.create({
+  baseURL: "http://localhost:5000/api", // <-- THIS IS CRITICAL
+});
 
-export async function put(path, body, token) {
-  return fetch(API + path, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-      ...(token && { Authorization: `Bearer ${token}` }),
-    },
-    body: JSON.stringify(body),
-  }).then(res => res.json());
-}
+// Attach token automatically
+api.interceptors.request.use((config) => {
+  const token = localStorage.getItem("token");
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
-export async function get(path, token) {
-  return fetch(API + path, {
-    headers: {
-      ...(token && { Authorization: `Bearer ${token}` }),
-    }
-  }).then(res => res.json());
-}
+export const post = async (url, data) => {
+  try {
+    const res = await api.post(url, data);
+    return res.data;
+  } catch (err) {
+    return err.response?.data || { error: "Server error" };
+  }
+};
+
+export const get = async (url) => {
+  try {
+    const res = await api.get(url);
+    return res.data;
+  } catch (err) {
+    return err.response?.data || { error: "Server error" };
+  }
+};

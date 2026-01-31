@@ -40,7 +40,7 @@ app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);  // << ADD THIS
 
 // --- MATCH ROUTES ---
-app.use("/api/match", matchRoutes);
+app.use("/api/matches", matchRoutes);
 
 // --- WHATSAPP ROUTES ---
 app.use("/api/connect", connectRoutes);
